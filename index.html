@@ -1,1 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agencia JM Elite 2026</title>
 
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#06101f;color:white}
+.hidden{display:none!important}
+.screen{display:none;min-height:100vh;padding:16px}
+.screen.active{display:block}
+
+:root{
+--oro:#f5c542;
+--azul:#0b4ea2;
+--fondo:#06101f;
+--card:#111b2d;
+--suave:#cfe6ff;
+}
+
+.logo{text-align:center;margin:22px 0}
+.logo img{width:110px;height:110px;border-radius:50%;border:3px solid var(--oro);object-fit:cover;background:#101a2c}
+.logo h1{color:var(--oro);margin-top:12px;font-size:27px}
+.logo p{color:var(--suave);margin-top:5px}
+
+.card{
+background:linear-gradient(180deg,#111b2d,#08111f);
+border:1px solid rgba(245,197,66,.35);
+border-radius:18px;
+padding:16px;
+margin-top:16px;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+background:#1d2a42;
+color:white;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,#f5c542,#b98725);
+color:#07111f;
+font-size:16px;
+font-weight:bold;
+}
+
+.link{text-align:center;color:#7fc8ff;margin-top:14px}
+
+.topbar{
+height:58px;
+background:#091422;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 12px;
+border-bottom:1px solid rgba(245,197,66,.25);
+position:sticky;
+top:0;
+z-index:20;
+}
+
+.topbar button{width:auto;padding:10px 14px;margin:0}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:14px;
+}
+
+.tile{
+min-height:100px;
+border-radius:16px;
+background:linear-gradient(180deg,#102644,#07111f);
+border:1px solid rgba(245,197,66,.28);
+padding:12px;
+text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+.tile .emoji{font-size:28px}
+.tile strong{color:var(--oro);font-size:13px;margin-top:6px}
+.tile span{font-size:11px;color:var(--suave);margin-top:4px}
+
+.profile{
+display:flex;
+gap:12px;
+align-items:center;
+}
+.profile img{
+width:76px;
+height:76px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid var(--oro);
+background:#101a2c;
+}
+.profile strong{color:var(--oro);font-size:18px}
+.profile span{font-size:12px;color:var(--suave)}
+
+.main-stage{
+min-height:250px;
+border-radius:24px;
+border:1px solid rgba(245,197,66,.35);
+background:radial-gradient(circle at center,#145cba,#07111f 70%);
+position:relative;
+display:flex;
+align-items:flex-end;
+overflow:hidden;
+padding:18px;
+}
+
+.stage-avatar{
+position:absolute;
+top:32px;
+left:50%;
+transform:translateX(-50%);
+width:118px;
+height:118px;
+border-radius:50%;
+border:3px solid var(--oro);
+background:#101a2c;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:45px;
+}
+.stage-avatar img{width:100%;height:100%;object-fit:cover}
+
+.status{
+position:absolute;
+top:14px;
+left:14px;
+background:#e83252;
+padding:7px 11px;
+border-radius:999px;
+font-size:11px;
+font-weight:bold;
+}
+
+.stage-info h2{color:white;font-size:22px}
+.stage-info p{font-size:13px;color:var(--suave);margin-top:5px}
+
+.mic-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-top:12px;
+}
+
+.mic{
+min-height:112px;
+border-radius:16px;
+background:#0c1728;
+border:1px solid rgba(245,197,66,.25);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:6px;
+position:relative;
+}
+.mic.host{border-color:#2dff88}
+.mic.busy{border-color:var(--oro)}
+.mic-avatar{
+width:48px;
+height:48px;
+border-radius:50%;
+border:2px solid rgba(245,197,66,.65);
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#101a2c;
+font-size:22px;
+}
+.mic-avatar img{width:100%;height:100%;object-fit:cover}
+.mic strong{color:var(--oro);font-size:11px;margin-top:5px}
+.mic span{color:var(--suave);font-size:10px;margin-top:3px}
+
+.chat-box{
+height:230px;
+overflow-y:auto;
+background:#08121f;
+border-radius:12px;
+padding:10px;
+margin-top:10px;
+}
+.msg{
+background:rgba(255,255,255,.07);
+border-radius:12px;
+padding:8px 10px;
+margin-bottom:7px;
+font-size:13px;
+}
+.msg strong{color:var(--oro)}
+
+.bottom{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+height:66px;
+background:#050b15;
+border-top:1px solid rgba(245,197,66,.25);
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:6px;
+padding:7px;
+z-index:50;
+}
+.bottom button{
+margin:0;
+padding:6px;
+font-size:10px;
+background:rgba(255,255,255,.08);
+color:white;
+}
+.bottom button span{display:block;font-size:20px}
+</style>
+</head>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginScreen" class="screen active">
+
+<div class="logo">
+<img src="logo.png" id="logoPrincipal">
+<h1>Agencia JM Elite</h1>
+<p>Versión Oficial 2026</p>
+</div>
+
+<div class="card">
+
+<input id="loginUser" type="text" placeholder="Correo electrónico o teléfono">
+
+<input id="loginPass" type="password" placeholder="Contraseña">
+
+<button id="btnLogin">
+Entrar
+</button>
+
+<div class="link" id="goRegister">
+Crear una cuenta
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= REGISTRO ================= -->
+
+<div id="registerScreen" class="screen">
+
+<div class="logo">
+
+<h1>Crear cuenta</h1>
+
+<p>Solo una vez</p>
+
+</div>
+
+<div class="card">
+
+<input id="regName" placeholder="Nombre completo">
+
+<input id="regUser" placeholder="Correo o teléfono">
+
+<input id="regPass" type="password" placeholder="Contraseña">
+
+<select id="regCountry">
+
+<option>España</option>
+<option>Cuba</option>
+<option>Venezuela</option>
+<option>Colombia</option>
+<option>México</option>
+<option>Argentina</option>
+<option>Otro</option>
+
+</select>
+
+<input id="regPhoto" type="file" accept="image/*">
+
+<button id="btnRegister">
+Crear cuenta
+</button>
+
+<div class="link" id="goLogin">
+
+Ya tengo una cuenta
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= INICIO ================= -->
+
+<div id="homeScreen" class="screen">
+
+<div class="topbar">
+
+<strong>Agencia JM Elite</strong>
+
+<button id="logoutBtn">
+Salir
+</button>
+
+</div>
+
+<div class="card profile">
+
+<img id="profilePhoto" src="logo.png">
+
+<div>
+
+<strong id="profileName">
+Usuario
+</strong>
+
+<br>
+
+<span id="profileRole">
+Emisora
+</span>
+
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="tile" id="btnSala">
+
+<div class="emoji">
+🎙️
+</div>
+
+<strong>Sala</strong>
+
+<span>Entrar</span>
+
+</div>
+
+<div class="tile">
+
+<div class="emoji">
+👤
+</div>
+
+<strong>Perfil</strong>
+
+<span>Mi cuenta</span>
+
+</div>
+
+<div class="tile">
+
+<div class="emoji">
+🎓
+</div>
+
+<strong>Academia</strong>
+
+<span>Cursos</span>
+
+</div>
+
+<div class="tile">
+
+<div class="emoji">
+🏆
+</div>
+
+<strong>Ranking</strong>
+
+<span>Top</span>
+
+</div>
+
+</div>
+
+  </div><!-- ================= SALA ================= -->
+
+<div id="salaScreen" class="screen">
+
+<div class="topbar">
+<button id="backHome">⬅</button>
+<strong>Sala JM Elite</strong>
+</div>
+
+<div class="main-stage">
+<div class="status">● EN VIVO</div>
+
+<div class="stage-avatar" id="stageAvatar">👑</div>
+
+<div class="stage-info">
+<h2 id="stageTitle">Sala oficial</h2>
+<p id="stageText">Formación, reuniones y apoyo para emisoras.</p>
+</div>
+</div>
+
+<div class="card">
+<button id="btnTakeSeat">🎙️ Subir a silla</button>
+<button id="btnLeaveSeat">⬇️ Bajar de silla</button>
+<button id="btnMic">🔇 Silenciar / Abrir micro</button>
+</div>
+
+<div class="card">
+<h2>🎙️ Micrófonos</h2>
+<div id="micGrid" class="mic-grid"></div>
+</div>
+
+<div class="card">
+<h2>💬 Chat</h2>
+<div id="chatBox" class="chat-box"></div>
+<input id="chatInput" placeholder="Escribe un mensaje...">
+<button id="btnSend">Enviar</button>
+</div>
+
+</div>
+
+<div class="bottom">
+<button id="navHome"><span>🏠</span>Inicio</button>
+<button id="navSala"><span>🎙️</span>Sala</button>
+<button><span>🎓</span>Academia</button>
+<button><span>👤</span>Perfil</button>
+</div>
+
+<script>
+const APP_KEY = "jm_elite_2026_profile";
+const LOGIN_KEY = "jm_elite_2026_logged";
+const CHAT_KEY = "jm_elite_2026_chat";
+const SEATS_KEY = "jm_elite_2026_seats";
+
+let currentUser = null;
+let selectedSeat = null;
+
+const seatsBase = [
+  {id:1,label:"Host",host:true},
+  {id:2,label:"Ruth"},
+  {id:3,label:"Yandira"},
+  {id:4,label:"Plaza 4"},
+  {id:5,label:"Plaza 5"},
+  {id:6,label:"Plaza 6"},
+  {id:7,label:"Plaza 7"},
+  {id:8,label:"Plaza 8"},
+  {id:9,label:"Plaza 9"},
+  {id:10,label:"Plaza 10"},
+  {id:11,label:"Plaza 11"},
+  {id:12,label:"Plaza 12"}
+];
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function show(screenId){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(screenId).classList.add("active");
+}
+
+function getRole(name){
+  const n = (name || "").toLowerCase();
+  if(n.includes("jesus") || n.includes("jesús") || n.includes("chus")) return "Host";
+  if(n.includes("ruth") || n.includes("yandira")) return "Admin";
+  return "Emisora";
+}
+
+function saveProfile(profile){
+  localStorage.setItem(APP_KEY, JSON.stringify(profile));
+  localStorage.setItem(LOGIN_KEY, "yes");
+  currentUser = profile;
+  updateHome();
+  show("homeScreen");
+}
+
+function loadProfile(){
+  const profile = JSON.parse(localStorage.getItem(APP_KEY) || "null");
+  const logged = localStorage.getItem(LOGIN_KEY) === "yes";
+
+  if(profile && logged){
+    currentUser = profile;
+    updateHome();
+    show("homeScreen");
+  }else{
+    show("loginScreen");
+  }
+}
+
+function updateHome(){
+  if(!currentUser) return;
+
+  $("profileName").innerText = currentUser.name;
+  $("profileRole").innerText = currentUser.role + " · " + currentUser.country;
+
+  if(currentUser.photo){
+    $("profilePhoto").src = currentUser.photo;
+  }
+}
+
+function register(){
+  const name = $("regName").value.trim();
+  const user = $("regUser").value.trim();
+  const pass = $("regPass").value.trim();
+  const country = $("regCountry").value;
+  const photoFile = $("regPhoto").files[0];
+
+  if(!name || !user || !pass){
+    alert("Faltan datos.");
+    return;
+  }
+
+  const finish = (photo)=>{
+    const profile = {
+      id:"user-" + Date.now(),
+      name,
+      user,
+      pass,
+      country,
+      role:getRole(name),
+      photo:photo || "",
+      muted:false
+    };
+
+    saveProfile(profile);
+  };
+
+  if(photoFile){
+    const reader = new FileReader();
+    reader.onload = e => finish(e.target.result);
+    reader.readAsDataURL(photoFile);
+  }else{
+    finish("");
+  }
+}
+
+function login(){
+  const user = $("loginUser").value.trim();
+  const pass = $("loginPass").value.trim();
+  const profile = JSON.parse(localStorage.getItem(APP_KEY) || "null");
+
+  if(!profile){
+    alert("Primero crea una cuenta.");
+    show("registerScreen");
+    return;
+  }
+
+  if(profile.user === user && profile.pass === pass){
+    currentUser = profile;
+    localStorage.setItem(LOGIN_KEY, "yes");
+    updateHome();
+    show("homeScreen");
+  }else{
+    alert("Usuario o contraseña incorrectos.");
+  }
+}
+
+function logout(){
+  localStorage.removeItem(LOGIN_KEY);
+  show("loginScreen");
+}
+
+function getSeats(){
+  return JSON.parse(localStorage.getItem(SEATS_KEY) || "{}");
+}
+
+function saveSeats(seats){
+  localStorage.setItem(SEATS_KEY, JSON.stringify(seats));
+}
+
+function renderSeats(){
+  const grid = $("micGrid");
+  grid.innerHTML = "";
+
+  const seats = getSeats();
+
+  seatsBase.forEach(seat=>{
+    const data = seats[seat.id];
+    const busy = !!data;
+
+    const div = document.createElement("div");
+    div.className = "mic" + (seat.host ? " host" : "") + (busy ? " busy" : "");
+
+    div.innerHTML = `
+      <div class="mic-avatar">
+        ${busy && data.photo ? `<img src="${data.photo}">` : (seat.host ? "👑" : "🏛️")}
+      </div>
+      <strong>${busy ? data.name : seat.label}</strong>
+      <span>${busy ? data.role : "Silla libre"}</span>
+      <span>${busy ? (data.muted ? "🔇 Silenciado" : "🎙️ Micro abierto") : "Logo JM Elite"}</span>
+    `;
+
+    div.onclick = ()=>{
+      selectedSeat = seat.id;
+      if(!busy){
+        takeSeat(seat.id);
+      }else{
+        setStage(data);
+      }
+    };
+
+    grid.appendChild(div);
+  });
+}
+
+function setStage(user){
+  $("stageTitle").innerText = user.name + " en sala";
+  $("stageText").innerText = user.role + " · " + user.country;
+
+  if(user.photo){
+    $("stageAvatar").innerHTML = `<img src="${user.photo}">`;
+  }else{
+    $("stageAvatar").innerHTML = user.role === "Host" ? "👑" : "🎙️";
+  }
+}
+
+function openSala(){
+  if(!currentUser){
+    alert("Primero inicia sesión.");
+    show("loginScreen");
+    return;
+  }
+
+  show("salaScreen");
+
+  if(currentUser.role === "Host"){
+    const seats = getSeats();
+    seats[1] = currentUser;
+    saveSeats(seats);
+  }
+
+  setStage(currentUser);
+  renderSeats();
+  renderChat();
+}
+
+function goHome(){
+  show("homeScreen");
+}
+
+function takeSeat(id){
+  if(!currentUser){
+    alert("Primero inicia sesión.");
+    return;
+  }
+
+  if(id === 1 && currentUser.role !== "Host"){
+    alert("La silla Host está reservada.");
+    return;
+  }
+
+  const seats = getSeats();
+
+  Object.keys(seats).forEach(k=>{
+    if(seats[k].id === currentUser.id){
+      delete seats[k];
+    }
+  });
+
+  seats[id] = currentUser;
+  saveSeats(seats);
+  selectedSeat = id;
+  renderSeats();
+  setStage(currentUser);
+}
+
+function takeFreeSeat(){
+  if(currentUser.role === "Host"){
+    takeSeat(1);
+    return;
+  }
+
+  const seats = getSeats();
+
+  for(const seat of seatsBase){
+    if(seat.id === 1) continue;
+    if(!seats[seat.id]){
+      takeSeat(seat.id);
+      return;
+    }
+  }
+
+  alert("No hay sillas libres.");
+}
+
+function leaveSeat(){
+  const seats = getSeats();
+  let found = null;
+
+  Object.keys(seats).forEach(k=>{
+    if(seats[k].id === currentUser.id){
+      found = k;
+    }
+  });
+
+  if(!found){
+    alert("No estás en ninguna silla.");
+    return;
+  }
+
+  if(found === "1" && currentUser.role === "Host"){
+    alert("El Host queda fijo en la silla principal.");
+    return;
+  }
+
+  delete seats[found];
+  saveSeats(seats);
+  renderSeats();
+}
+
+function toggleMic(){
+  const seats = getSeats();
+  let found = null;
+
+  Object.keys(seats).forEach(k=>{
+    if(seats[k].id === currentUser.id){
+      found = k;
+    }
+  });
+
+  if(!found){
+    alert("Primero sube a una silla.");
+    return;
+  }
+
+  seats[found].muted = !seats[found].muted;
+  currentUser.muted = seats[found].muted;
+
+  localStorage.setItem(APP_KEY, JSON.stringify(currentUser));
+  saveSeats(seats);
+  renderSeats();
+  setStage(currentUser);
+}
+
+function getChat(){
+  return JSON.parse(localStorage.getItem(CHAT_KEY) || "[]");
+}
+
+function saveChat(list){
+  localStorage.setItem(CHAT_KEY, JSON.stringify(list));
+}
+
+function renderChat(){
+  const box = $("chatBox");
+  const list = getChat();
+  box.innerHTML = "";
+
+  if(list.length === 0){
+    box.innerHTML = `<div class="msg"><strong>Sistema:</strong> Chat listo.</div>`;
+    return;
+  }
+
+  list.forEach(m=>{
+    const div = document.createElement("div");
+    div.className = "msg";
+    div.innerHTML = `<strong>${m.name}:</strong> ${m.text}`;
+    box.appendChild(div);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendMessage(){
+  const input = $("chatInput");
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  const list = getChat();
+  list.push({
+    name:currentUser.name,
+    text,
+    date:new Date().toISOString()
+  });
+
+  saveChat(list);
+  input.value = "";
+  renderChat();
+}
+
+$("goRegister").onclick = ()=>show("registerScreen");
+$("goLogin").onclick = ()=>show("loginScreen");
+$("btnRegister").onclick = register;
+$("btnLogin").onclick = login;
+$("logoutBtn").onclick = logout;
+$("btnSala").onclick = openSala;
+$("navSala").onclick = openSala;
+$("navHome").onclick = goHome;
+$("backHome").onclick = goHome;
+$("btnTakeSeat").onclick = takeFreeSeat;
+$("btnLeaveSeat").onclick = leaveSeat;
+$("btnMic").onclick = toggleMic;
+$("btnSend").onclick = sendMessage;
+
+$("chatInput").addEventListener("keydown", e=>{
+  if(e.key === "Enter"){
+    sendMessage();
+  }
+});
+
+loadProfile();
+</script>
+
+</body>
+  </html>
